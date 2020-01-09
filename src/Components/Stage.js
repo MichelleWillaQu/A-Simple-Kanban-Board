@@ -11,10 +11,14 @@ import {
 const Stage = ({ title, stageId, children }) => {
   return (
     <Card className="stage" elevation={Elevation.TWO}>
-      <h5 className="stageTitle">{title}</h5>
-      <p>{children}</p>
+      <h3 className="stageTitle">{title}</h3>
+      {children}
       <Collapse>
-        <InputGroup></InputGroup>
+        <InputGroup
+          rightElement={widget - button}
+          small={small}
+          placeholder="Task Name"
+        ></InputGroup>
       </Collapse>
     </Card>
   );

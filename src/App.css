@@ -42,6 +42,5 @@
   margin: 1px;
   display: flex;
   flex: 1 1 25%;
-  justify-content: center;
   flex-direction: column;
 }
