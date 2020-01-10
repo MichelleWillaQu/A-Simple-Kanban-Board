@@ -14,13 +14,37 @@ class App extends React.Component {
         { 1: 'task 3' },
         { 2: 'task 4' },
       ],
+      isOpen: [false, false, false, false],
     };
+    this.collapseClick = this.collapseClick.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+  collapseClick(id) {
+    const copyList = this.state.isOpen.slice();
+    copyList[id] = !copyList[id];
+    this.setState({ isOpen: copyList });
+  }
+  handleSubmit(id) {
+    const el = '#input-' + id;
+    const newTask = document.querySelector(el).value;
+    const newTasksList = this.state.tasks;
+    newTasksList.push({ [id]: newTask });
+    const isOpenCopyList = this.state.isOpen;
+    isOpenCopyList[id] = !isOpenCopyList[id];
+    this.setState({ isOpen: isOpenCopyList, tasks: newTasksList });
   }
   renderStages() {
     const outputList = [];
     for (const idx in this.state.stages) {
       outputList.push(
-        <Stage key={idx} title={this.state.stages[idx]}>
+        <Stage
+          key={idx}
+          title={this.state.stages[idx]}
+          handleClick={this.collapseClick}
+          handleSubmit={this.handleSubmit}
+          isOpen={this.state.isOpen[idx]}
+          stageId={idx}
+        >
           {this.makechildren(idx)}
         </Stage>
       );
@@ -37,6 +61,7 @@ class App extends React.Component {
     return outputList;
   }
   render() {
+    console.log('YO ', this.state.tasks);
     return (
       <span>
         <h1 style={{ textAlign: 'center' }}>Kanban Board</h1>

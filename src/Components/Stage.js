@@ -8,15 +8,28 @@ import {
   InputGroup,
 } from '@blueprintjs/core';
 
-const Stage = ({ title, stageId, children }) => {
+const Stage = ({
+  title,
+  stageId,
+  children,
+  handleClick,
+  handleSubmit,
+  isOpen,
+}) => {
+  const submitButton = (
+    <Button onClick={() => handleSubmit(stageId)}>Confirm</Button>
+  );
   return (
     <Card className="stage" elevation={Elevation.TWO}>
       <h3 className="stageTitle">{title}</h3>
       {children}
-      <Collapse>
+      <Button onClick={() => handleClick(stageId)} hidden={isOpen}>
+        Add Task
+      </Button>
+      <Collapse isOpen={isOpen}>
         <InputGroup
-          rightElement={widget - button}
-          small={small}
+          rightElement={submitButton}
+          id={'input-' + stageId}
           placeholder="Task Name"
         ></InputGroup>
       </Collapse>
