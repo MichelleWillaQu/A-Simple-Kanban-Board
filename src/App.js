@@ -15,6 +15,12 @@ class App extends React.Component {
         { 2: 'task 4' },
       ],
       isOpen: [false, false, false, false],
+      isClicked: [
+        { 'task 1': false },
+        { 'task 2': false },
+        { 'task 3': false },
+        { 'task 4': false },
+      ],
     };
     this.collapseClick = this.collapseClick.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);

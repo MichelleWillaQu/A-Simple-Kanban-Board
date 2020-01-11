@@ -37,10 +37,53 @@
   }
 }
 
+/* Started here */
+
 .stage {
   border: black 1px solid;
-  margin: 1px;
+  margin: 5px;
   display: flex;
   flex: 1 1 25%;
   flex-direction: column;
+  background-color: rgb(247, 247, 247);
+}
+
+.task {
+  background-color: white;
+  margin: 5px;
+  padding: 10px 0px;
+}
+
+.task-active {
+  background-color: blue;
+}
+
+.green {
+  background-color: green;
+  color: white;
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+}
+
+.confirm {
+  width: 50px;
+}
+
+.add {
+  /* width: 65px; */
+  flex: 0 1 auto;
+  margin: 5px;
+  align-self: center;
+}
+
+.input {
+  text-align: left;
+  display: flex;
+  margin: 5px;
+  flex: 0 1 auto;
+}
+
+input.bp3-input {
+  padding-right: 0px !important;
 }
