@@ -59,20 +59,18 @@
 }
 
 .green {
+  /* Note: hidden attribute fails to work if there is a more specific selector attribute, such as display: flex */
   background-color: green;
   color: white;
   border-radius: 3px;
-  display: flex;
   justify-content: center;
 }
 
 .confirm {
-  width: 50px;
+  flex: 0 1 auto;
 }
 
 .add {
-  /* width: 65px; */
-  flex: 0 1 auto;
   margin: 5px;
   align-self: center;
 }
@@ -81,9 +79,10 @@
   text-align: left;
   display: flex;
   margin: 5px;
-  flex: 0 1 auto;
 }
 
 input.bp3-input {
   padding-right: 0px !important;
+  flex: 1 1 100%;
+  display: flex;
 }
