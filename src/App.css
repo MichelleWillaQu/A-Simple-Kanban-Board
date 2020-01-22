@@ -68,6 +68,8 @@
 
 .confirm {
   flex: 0 1 auto;
+  height: 22px;
+  align-self: center;
 }
 
 .add {
@@ -85,4 +87,37 @@ input.bp3-input {
   padding-right: 0px !important;
   flex: 1 1 100%;
   display: flex;
+}
+
+.clicked {
+  background-color: rgb(1, 73, 139);
+  color: white;
+}
+
+/* CSS for Task Buttons */
+.option {
+  display: inline-flex;
+  align-items: center;
+  margin: 3px;
+  border-radius: 5px;
+  padding: 4px;
+}
+
+span.bp3-icon {
+  height: 12px;
+}
+
+.delete {
+  color: white;
+  background-color: rgb(180, 3, 3);
+}
+
+.trashcan {
+  margin-right: 3px;
+}
+
+.back,
+.forward {
+  color: white;
+  background-color: rgb(32, 115, 209);
 }

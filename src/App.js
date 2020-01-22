@@ -2,28 +2,25 @@ import React from 'react';
 import './App.css';
 import Stage from './Components/Stage';
 import Task from './Components/Task';
+import { Button, Icon } from '@blueprintjs/core';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       stages: ['Backlog', 'To do', 'Ongoing', 'Done'],
-      tasks: [
-        { 0: 'task 1' },
-        { 0: 'task 2' },
-        { 1: 'task 3' },
-        { 2: 'task 4' },
-      ],
+      tasks: {
+        'task 1': ['0', false],
+        'task 2': ['0', false],
+        'task 3': ['1', false],
+        'task 4': ['2', false],
+      },
       isOpen: [false, false, false, false],
-      isClicked: [
-        { 'task 1': false },
-        { 'task 2': false },
-        { 'task 3': false },
-        { 'task 4': false },
-      ],
     };
     this.collapseClick = this.collapseClick.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.generateTaskOptions = this.generateTaskOptions.bind(this);
+    this.taskClick = this.taskClick.bind(this);
   }
   collapseClick(id) {
     const copyList = this.state.isOpen.slice();
@@ -34,10 +31,15 @@ class App extends React.Component {
     const el = '#input-' + id;
     const newTask = document.querySelector(el).value;
     const newTasksList = this.state.tasks;
-    newTasksList.push({ [id]: newTask });
+    newTasksList.push({ [newTask]: [id, false] });
     const isOpenCopyList = this.state.isOpen;
     isOpenCopyList[id] = !isOpenCopyList[id];
     this.setState({ isOpen: isOpenCopyList, tasks: newTasksList });
+  }
+  taskClick(name) {
+    const currentList = this.state.tasks[name].slice();
+    currentList[1] = !currentList[1];
+    this.setState({ tasks: { ...this.state.tasks, [name]: currentList } });
   }
   renderStages() {
     const outputList = [];
@@ -59,15 +61,65 @@ class App extends React.Component {
   }
   makechildren(key) {
     const outputList = [];
-    for (const item of this.state.tasks) {
-      if (item[key]) {
-        outputList.push(<Task key={item[key]} title={item[key]} />);
+    for (const taskArr of Object.entries(this.state.tasks)) {
+      if (taskArr[1][0] === key) {
+        if (taskArr[1][1]) {
+          outputList.push(this.generateTaskOptions(key));
+        }
+        outputList.push(
+          <Task
+            key={taskArr[0]}
+            title={taskArr[0]}
+            clicked={taskArr[1][1]}
+            taskClick={() => this.taskClick(taskArr[0])}
+          />
+        );
       }
     }
     return outputList;
   }
+  generateTaskOptions(key) {
+    let back = null;
+    let forward = null;
+    if (key !== '0') {
+      back = (
+        <Button
+          className="back option"
+          icon={<Icon iconSize="12" icon="chevron-left" color="white"></Icon>}
+          text="Back"
+        ></Button>
+      );
+    }
+    if (key !== '4') {
+      forward = (
+        <Button
+          className="forward option"
+          icon={<Icon iconSize="12" icon="chevron-right" color="white"></Icon>}
+          text="Forward"
+        ></Button>
+      );
+    }
+    return (
+      <div className="taskoptions">
+        {back}
+        {forward}
+        <Button
+          className="delete option"
+          icon={
+            <Icon
+              className="trashcan"
+              iconSize="12"
+              icon="trash"
+              color="white"
+            ></Icon>
+          }
+          small={true}
+          text="Delete"
+        ></Button>
+      </div>
+    );
+  }
   render() {
-    console.log('YO ', this.state.tasks);
     return (
       <span>
         <h1 style={{ textAlign: 'center' }}>Kanban Board</h1>
