@@ -22,6 +22,9 @@ class App extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.generateTaskOptions = this.generateTaskOptions.bind(this);
     this.taskClick = this.taskClick.bind(this);
+    this.deleteTask = this.deleteTask.bind(this);
+    this.moveBackwards = this.moveBackwards.bind(this);
+    this.moveForwards = this.moveForwards.bind(this);
   }
   collapseClick(id) {
     const copyList = this.state.isOpen.slice();
@@ -76,6 +79,30 @@ class App extends React.Component {
       });
     }
   }
+  deleteTask() {
+    // Copy the tasks object
+    const currentTasks = Object.assign({}, this.state.tasks);
+    delete currentTasks[this.state.isSelected];
+    this.setState({ tasks: currentTasks, isSelected: '' });
+  }
+  moveBackwards() {
+    let taskArr = this.state.tasks[this.state.isSelected].slice();
+    const newLocation = (parseInt(taskArr[0]) - 1).toString();
+    taskArr = [newLocation, false];
+    this.setState({
+      tasks: { ...this.state.tasks, [this.state.isSelected]: taskArr },
+      isSelected: '',
+    });
+  }
+  moveForwards() {
+    let taskArr = this.state.tasks[this.state.isSelected].slice();
+    const newLocation = (parseInt(taskArr[0]) + 1).toString();
+    taskArr = [newLocation, false];
+    this.setState({
+      tasks: { ...this.state.tasks, [this.state.isSelected]: taskArr },
+      isSelected: '',
+    });
+  }
   renderStages() {
     const outputList = [];
     for (const idx in this.state.stages) {
@@ -122,6 +149,7 @@ class App extends React.Component {
           className="back option"
           icon={<Icon iconSize="12" icon="chevron-left" color="white"></Icon>}
           text="Back"
+          onClick={this.moveBackwards}
         ></Button>
       );
     }
@@ -131,6 +159,7 @@ class App extends React.Component {
           className="forward option"
           icon={<Icon iconSize="12" icon="chevron-right" color="white"></Icon>}
           text="Forward"
+          onClick={this.moveForwards}
         ></Button>
       );
     }
@@ -150,6 +179,7 @@ class App extends React.Component {
           }
           small={true}
           text="Delete"
+          onClick={this.deleteTask}
         ></Button>
       </div>
     );
