@@ -32,10 +32,16 @@ class App extends React.Component {
     const el = '#input-' + id;
     const newTask = document.querySelector(el).value;
     const newTasksList = this.state.tasks;
-    newTasksList[newTask] = [id, false];
-    const isOpenCopyList = this.state.isOpen.slice();
-    isOpenCopyList[id] = !isOpenCopyList[id];
-    this.setState({ isOpen: isOpenCopyList, tasks: newTasksList });
+    if (newTask in newTasksList) {
+      alert(
+        'Name already used. Please choose a different name or delete the old task.'
+      );
+    } else {
+      newTasksList[newTask] = [id, false];
+      const isOpenCopyList = this.state.isOpen.slice();
+      isOpenCopyList[id] = !isOpenCopyList[id];
+      this.setState({ isOpen: isOpenCopyList, tasks: newTasksList });
+    }
   }
   taskClick(name) {
     if (this.state.isSelected) {
