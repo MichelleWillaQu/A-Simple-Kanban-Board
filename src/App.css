@@ -60,15 +60,14 @@
 
 .green {
   /* Note: hidden attribute fails to work if there is a more specific selector attribute, such as display: flex */
-  background-color: green;
+  background-color: rgb(36, 138, 36);
   color: white;
-  border-radius: 3px;
-  justify-content: center;
+  border-radius: 5px;
+  height: 22px;
 }
 
 .confirm {
   flex: 0 1 auto;
-  height: 22px;
   align-self: center;
 }
 

@@ -16,6 +16,7 @@ class App extends React.Component {
         'task 4': ['2', false],
       },
       isOpen: [false, false, false, false],
+      isSelected: '',
     };
     this.collapseClick = this.collapseClick.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -31,15 +32,43 @@ class App extends React.Component {
     const el = '#input-' + id;
     const newTask = document.querySelector(el).value;
     const newTasksList = this.state.tasks;
-    newTasksList.push({ [newTask]: [id, false] });
-    const isOpenCopyList = this.state.isOpen;
+    newTasksList[newTask] = [id, false];
+    const isOpenCopyList = this.state.isOpen.slice();
     isOpenCopyList[id] = !isOpenCopyList[id];
     this.setState({ isOpen: isOpenCopyList, tasks: newTasksList });
   }
   taskClick(name) {
-    const currentList = this.state.tasks[name].slice();
-    currentList[1] = !currentList[1];
-    this.setState({ tasks: { ...this.state.tasks, [name]: currentList } });
+    if (this.state.isSelected) {
+      const currentList = this.state.tasks[name].slice();
+      currentList[1] = !currentList[1];
+      if (currentList[1]) {
+        // Enter only if the current task has just been selected so turn off the other selected task
+        const oldList = this.state.tasks[this.state.isSelected].slice();
+        oldList[1] = false;
+        this.setState({
+          tasks: {
+            ...this.state.tasks,
+            [name]: currentList,
+            [this.state.isSelected]: oldList,
+          },
+          isSelected: name,
+        });
+      } else {
+        // The current task was just deselected (turned false)
+        this.setState({
+          tasks: { ...this.state.tasks, [name]: currentList },
+          isSelected: '',
+        });
+      }
+    } else {
+      // There is no currently selected task
+      const currentList = this.state.tasks[name].slice();
+      currentList[1] = !currentList[1];
+      this.setState({
+        tasks: { ...this.state.tasks, [name]: currentList },
+        isSelected: name,
+      });
+    }
   }
   renderStages() {
     const outputList = [];
