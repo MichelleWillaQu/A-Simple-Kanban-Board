@@ -1,6 +1,5 @@
 // A Task
 import React from 'react';
-import { Button } from '@blueprintjs/core';
 
 const Task = ({ title, clicked, taskClick }) => {
   return (
