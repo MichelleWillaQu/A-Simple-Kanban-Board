@@ -9,15 +9,12 @@ class App extends React.Component {
     super(props);
     this.state = {
       stages: ['Backlog', 'To do', 'Ongoing', 'Done'],
-      tasks: {
-        'task 1': ['0', false],
-        'task 2': ['0', false],
-        'task 3': ['1', false],
-        'task 4': ['2', false],
-      },
+      tasks: {},
       isOpen: [false, false, false, false],
       isSelected: '',
+      localStorage: true,
     };
+    this.componentDidCleanup = this.componentDidCleanup.bind(this);
     this.collapseClick = this.collapseClick.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.generateTaskOptions = this.generateTaskOptions.bind(this);
@@ -25,6 +22,31 @@ class App extends React.Component {
     this.deleteTask = this.deleteTask.bind(this);
     this.moveBackwards = this.moveBackwards.bind(this);
     this.moveForwards = this.moveForwards.bind(this);
+    this.clearTasks = this.clearTasks.bind(this);
+  }
+  componentDidMount() {
+    // Event called when window, document, and resources are about to be unloaded
+    window.addEventListener('beforeunload', this.componentDidCleanup);
+    if (localStorage) {
+      const storage = localStorage.getItem('tasks');
+      if (storage) {
+        this.setState({ tasks: JSON.parse(storage) });
+      }
+    } else {
+      alert('Sorry your browser does not support HTML5 Web Storage.');
+      this.setState({ localStorage: false });
+    }
+  }
+  componentWillUnmount() {
+    // Does not fire when the user closes or refreshes the page so must have event listener
+    this.componentDidCleanup();
+    // Remove to resume normal unmounting
+    window.removeEventListener('beforeunload', this.componentDidCleanup);
+  }
+  componentDidCleanup() {
+    if (this.state.localStorage) {
+      localStorage.setItem('tasks', JSON.stringify(this.state.tasks));
+    }
   }
   collapseClick(id) {
     const copyList = this.state.isOpen.slice();
@@ -102,6 +124,12 @@ class App extends React.Component {
       tasks: { ...this.state.tasks, [this.state.isSelected]: taskArr },
       isSelected: '',
     });
+  }
+  clearTasks() {
+    if (this.state.localStorage) {
+      localStorage.clear();
+    }
+    this.setState({ tasks: {} });
   }
   renderStages() {
     const outputList = [];
@@ -194,6 +222,9 @@ class App extends React.Component {
         >
           {this.renderStages()}
         </div>
+        <Button className="clear" onClick={this.clearTasks}>
+          Clear All Tasks
+        </Button>
       </span>
     );
   }
