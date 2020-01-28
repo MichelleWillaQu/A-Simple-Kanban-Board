@@ -16,6 +16,15 @@ const Stage = ({
   handleSubmit,
   isOpen,
 }) => {
+  // data-testid
+  const stageTestId = `stage-${stageId}`;
+  const addButtonTestId = `${stageTestId}-add-button`;
+  const newTaskInputTestId = `${stageTestId}-new-task-input`;
+  const newTaskInputConfirmTestId = `${stageTestId}-new-task-input-confirm`;
+  const moveLeftButtonTestId = `${stageTestId}-move-left`;
+  const moveRightButtonTestId = `${stageTestId}-move-right`;
+  const deleteButtonTestId = `${stageTestId}-delete`;
+
   const submitButton = (
     <Button onClick={() => handleSubmit(stageId)} className="green confirm">
       Confirm
