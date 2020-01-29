@@ -16,7 +16,7 @@ const Stage = ({
   handleSubmit,
   isOpen,
 }) => {
-  // data-testid
+  // data-testid attributes
   const stageTestId = `stage-${stageId}`;
   const addButtonTestId = `${stageTestId}-add-button`;
   const newTaskInputTestId = `${stageTestId}-new-task-input`;
@@ -31,7 +31,12 @@ const Stage = ({
     </Button>
   );
   return (
-    <Card className="stage" elevation={Elevation.TWO}>
+    <Card
+      data-testid={stageTestId}
+      name={title}
+      className="stage"
+      elevation={Elevation.TWO}
+    >
       <h3 className="stageTitle">{title}</h3>
       {children}
       <Button
