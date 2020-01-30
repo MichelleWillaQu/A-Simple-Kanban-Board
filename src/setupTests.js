@@ -5,11 +5,8 @@
 import '@testing-library/jest-dom/extend-expect';
 
 // jest.fn() is a mock function - in this case, I want the local storage mock to do things
-const localStorageMock = (function() {
-  let store = {
-    tasks:
-      '{"task 1":["0",false],"task 2":["0",false],"task 3":["1",false],"task 4":["2",false]}',
-  };
+const localStorageMock = function() {
+  let store = {};
   return {
     getItem: function(key) {
       return store[key] || null;
@@ -21,5 +18,6 @@ const localStorageMock = (function() {
       store = {};
     },
   };
-})();
+};
+
 global.localStorage = localStorageMock;
