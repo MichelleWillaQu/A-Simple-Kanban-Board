@@ -26,7 +26,11 @@ const Stage = ({
   const deleteButtonTestId = `${stageTestId}-delete`;
 
   const submitButton = (
-    <Button onClick={() => handleSubmit(stageId)} className="green confirm">
+    <Button
+      data-testid={newTaskInputConfirmTestId}
+      onClick={() => handleSubmit(stageId)}
+      className="green confirm"
+    >
       Confirm
     </Button>
   );
@@ -40,6 +44,7 @@ const Stage = ({
       <h3 className="stageTitle">{title}</h3>
       {children}
       <Button
+        data-testid={addButtonTestId}
         className="green add"
         onClick={() => handleClick(stageId)}
         hidden={isOpen}
@@ -48,6 +53,7 @@ const Stage = ({
       </Button>
       <Collapse isOpen={isOpen}>
         <InputGroup
+          data-testid={newTaskInputTestId}
           className="input"
           rightElement={submitButton}
           id={'input-' + stageId}
