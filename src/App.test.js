@@ -30,8 +30,14 @@ describe('1. Stages rendered', () => {
   });
 });
 
-// test('renders learn react link', () => {
-//   const { getByText } = render(<App />);
-//   const linkElement = getByText(/learn react/i);
-//   expect(linkElement).toBeInTheDocument();
-// });
+describe('2. Dummy tasks render', () => {
+  it('shows task 1', async () => {
+    const { getByTestId } = render(<App localStorage={localStorage} />);
+    await (() => {
+      const taskEl = getByTestId('task-task-1');
+      const stageEl = getByTestId('stage-0');
+      expect(taskEl).toBeInTheDocument();
+      expect(stageEl).toContain(taskEl);
+    });
+  });
+});
