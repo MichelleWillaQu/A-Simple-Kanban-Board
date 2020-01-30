@@ -7,17 +7,15 @@ import '@testing-library/jest-dom/extend-expect';
 // jest.fn() is a mock function - in this case, I want the local storage mock to do things
 const localStorageMock = (function() {
   let store = {
-    'task 1': ['0', false],
-    'task 2': ['0', false],
-    'task 3': ['1', false],
-    'task 4': ['2', false],
+    tasks:
+      '{"task 1":["0",false],"task 2":["0",false],"task 3":["1",false],"task 4":["2",false]}',
   };
   return {
     getItem: function(key) {
-      return JSON.parse(store[key]) || null;
+      return store[key] || null;
     },
     setItem: function(key, value) {
-      store[key] = JSON.stringify(value);
+      store[key] = value;
     },
     clear: function() {
       store = {};
