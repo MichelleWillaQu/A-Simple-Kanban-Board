@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import Stage from './Components/Stage';
 import Task from './Components/Task';
-import { Button, Icon } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 
 class App extends React.Component {
   constructor(props) {
@@ -17,7 +17,6 @@ class App extends React.Component {
     this.componentDidCleanup = this.componentDidCleanup.bind(this);
     this.collapseClick = this.collapseClick.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.generateTaskOptions = this.generateTaskOptions.bind(this);
     this.taskClick = this.taskClick.bind(this);
     this.deleteTask = this.deleteTask.bind(this);
     this.moveBackwards = this.moveBackwards.bind(this);
@@ -44,8 +43,12 @@ class App extends React.Component {
     window.removeEventListener('beforeunload', this.componentDidCleanup);
   }
   componentDidCleanup() {
+    const currentTasks = Object.assign({}, this.state.tasks);
+    if (this.state.isSelected) {
+      currentTasks[this.state.isSelected][1] = false;
+    }
     if (this.state.localStorage) {
-      localStorage.setItem('tasks', JSON.stringify(this.state.tasks));
+      localStorage.setItem('tasks', JSON.stringify(currentTasks));
     }
   }
   collapseClick(id) {
@@ -153,64 +156,21 @@ class App extends React.Component {
     const outputList = [];
     for (const taskArr of Object.entries(this.state.tasks)) {
       if (taskArr[1][0] === key) {
-        if (taskArr[1][1]) {
-          outputList.push(this.generateTaskOptions(key));
-        }
         outputList.push(
           <Task
             key={taskArr[0]}
             title={taskArr[0]}
             clicked={taskArr[1][1]}
             taskClick={() => this.taskClick(taskArr[0])}
+            stageId={key}
+            moveBackwards={this.moveBackwards}
+            moveForwards={this.moveForwards}
+            deleteTask={this.deleteTask}
           />
         );
       }
     }
     return outputList;
-  }
-  generateTaskOptions(key) {
-    let back = null;
-    let forward = null;
-    if (key !== '0') {
-      back = (
-        <Button
-          className="back option"
-          icon={<Icon iconSize="12" icon="chevron-left" color="white"></Icon>}
-          text="Back"
-          onClick={this.moveBackwards}
-        ></Button>
-      );
-    }
-    if (key !== '4') {
-      forward = (
-        <Button
-          className="forward option"
-          icon={<Icon iconSize="12" icon="chevron-right" color="white"></Icon>}
-          text="Forward"
-          onClick={this.moveForwards}
-        ></Button>
-      );
-    }
-    return (
-      <div className="taskoptions">
-        {back}
-        {forward}
-        <Button
-          className="delete option"
-          icon={
-            <Icon
-              className="trashcan"
-              iconSize="12"
-              icon="trash"
-              color="white"
-            ></Icon>
-          }
-          small={true}
-          text="Delete"
-          onClick={this.deleteTask}
-        ></Button>
-      </div>
-    );
   }
   render() {
     return (
