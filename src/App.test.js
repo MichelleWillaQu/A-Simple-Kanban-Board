@@ -140,3 +140,96 @@ describe('3. Added a Task to Stage 0', () => {
     });
   });
 });
+
+describe('4. Clicking on a task brings up task options', () => {
+  it('shows that Stage 0 tasks have 2 buttons: forwards and delete', () => {
+    const { getByTestId, queryByTestId } = render(<App />);
+    const stageEl = getByTestId('stage-0');
+    const taskEl = getByTestId('task-task-1');
+    fireEvent.click(taskEl);
+    const forwardsEl = getByTestId('stage-0-move-right');
+    const deleteEl = getByTestId('stage-0-delete');
+    expect(queryByTestId('stage-0-move-left')).not.toBeInTheDocument();
+    expect(forwardsEl).toBeInTheDocument();
+    expect(stageEl.contains(forwardsEl)).toBeTruthy();
+    expect(deleteEl).toBeInTheDocument();
+    expect(stageEl.contains(deleteEl)).toBeTruthy();
+  });
+  it('shows that Stage 1 tasks have 3 buttons: backwards, forwards, and delete', () => {
+    const { getByTestId } = render(<App />);
+    const stageEl = getByTestId('stage-1');
+    const taskEl = getByTestId('task-task-3');
+    fireEvent.click(taskEl);
+    const backwardsEl = getByTestId('stage-1-move-left');
+    const forwardsEl = getByTestId('stage-1-move-right');
+    const deleteEl = getByTestId('stage-1-delete');
+    expect(backwardsEl).toBeInTheDocument();
+    expect(stageEl.contains(backwardsEl)).toBeTruthy();
+    expect(forwardsEl).toBeInTheDocument();
+    expect(stageEl.contains(forwardsEl)).toBeTruthy();
+    expect(deleteEl).toBeInTheDocument();
+    expect(stageEl.contains(deleteEl)).toBeTruthy();
+  });
+  it('shows that Stage 3 tasks have 2 buttons: backwards and delete', () => {
+    const { getByTestId, queryByTestId } = render(<App />);
+    // Add a new task in Stage 4 (there is none currently)
+    const addButtonEl = getByTestId('stage-3-add-button');
+    fireEvent.click(addButtonEl);
+    const inputEl = getByTestId('stage-3-new-task-input');
+    inputEl.value = 'task 5';
+    fireEvent.change(inputEl);
+    const confirmEl = getByTestId('stage-3-new-task-input-confirm');
+    fireEvent.click(confirmEl);
+    // Start the check for task buttons
+    const stageEl = getByTestId('stage-3');
+    const taskEl = getByTestId('task-task-5');
+    fireEvent.click(taskEl);
+    const backwardsEl = getByTestId('stage-3-move-left');
+    const deleteEl = getByTestId('stage-3-delete');
+    expect(backwardsEl).toBeInTheDocument();
+    expect(stageEl.contains(backwardsEl)).toBeTruthy();
+    expect(queryByTestId('stage-3-move-right')).not.toBeInTheDocument();
+    expect(deleteEl).toBeInTheDocument();
+    expect(stageEl.contains(deleteEl)).toBeTruthy();
+  });
+});
+
+describe('5. Delete a Task', () => {
+  it('can delete task 1', () => {
+    const { getByTestId, queryByTestId } = render(<App />);
+    const task1El = getByTestId('task-task-1');
+    fireEvent.click(task1El);
+    const deleteEl = getByTestId('stage-0-delete');
+    fireEvent.click(deleteEl);
+    expect(queryByTestId('task-task-1')).not.toBeInTheDocument();
+  });
+});
+
+// describe('6. Move a Task Back and Forth', () => {
+//   it('can move task 1 to Stage 1', async () => {
+//     const { getByTestId } = render(<App />);
+//     const task1El = getByTestId('task-task-1');
+//     console.log('3', task1El.outerHTML);
+//     fireEvent.click(task1El);
+//     const forwardsEl = getByTestId('stage-0-move-right');
+//     fireEvent.click(forwardsEl);
+//     const stageEl = getByTestId('stage-1');
+//     console.log('4', stageEl.outerHTML);
+//     console.log('5', task1El.outerHTML);
+//     await wait();
+//     expect(stageEl.contains(task1El)).toBeTruthy();
+//   });
+//   it('can move task 3 to Stage 0', async () => {
+//     const { getByTestId } = render(<App />);
+//     const task1El = getByTestId('task-task-3');
+//     fireEvent.click(task1El);
+//     const backwardsEl = getByTestId('stage-1-move-left');
+//     fireEvent.click(backwardsEl);
+//     const stageEl = getByTestId('stage-0');
+//     await waitForDomChange({ task1El }).then(() => {
+//       expect(stageEl.contains(task1El)).toBeTruthy();
+//     });
+//   });
+// });
+
+describe('7. Clear localStorage with the button', () => {});
