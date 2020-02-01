@@ -34,7 +34,7 @@ const Task = ({
         ></Button>
       );
     }
-    if (stageId !== '4') {
+    if (stageId !== '3') {
       forward = (
         <Button
           data-testid={moveRightButtonTestId}
