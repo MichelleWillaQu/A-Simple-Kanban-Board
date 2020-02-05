@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, cleanup, fireEvent } from '@testing-library/react';
-import { waitForDomChange, wait } from '@testing-library/dom';
+import { waitForDomChange, wait, waitForElement } from '@testing-library/dom';
 import '@testing-library/jest-dom/extend-expect';
 import App from './App';
 
@@ -205,31 +205,46 @@ describe('5. Delete a Task', () => {
   });
 });
 
-// describe('6. Move a Task Back and Forth', () => {
-//   it('can move task 1 to Stage 1', async () => {
-//     const { getByTestId } = render(<App />);
-//     const task1El = getByTestId('task-task-1');
-//     console.log('3', task1El.outerHTML);
-//     fireEvent.click(task1El);
-//     const forwardsEl = getByTestId('stage-0-move-right');
-//     fireEvent.click(forwardsEl);
-//     const stageEl = getByTestId('stage-1');
-//     console.log('4', stageEl.outerHTML);
-//     console.log('5', task1El.outerHTML);
-//     await wait();
-//     expect(stageEl.contains(task1El)).toBeTruthy();
-//   });
-//   it('can move task 3 to Stage 0', async () => {
-//     const { getByTestId } = render(<App />);
-//     const task1El = getByTestId('task-task-3');
-//     fireEvent.click(task1El);
-//     const backwardsEl = getByTestId('stage-1-move-left');
-//     fireEvent.click(backwardsEl);
-//     const stageEl = getByTestId('stage-0');
-//     await waitForDomChange({ task1El }).then(() => {
-//       expect(stageEl.contains(task1El)).toBeTruthy();
-//     });
-//   });
-// });
+describe('6. Move a Task Back and Forth', () => {
+  it('can move task 1 to Stage 1', async () => {
+    const { getByTestId } = render(<App />);
+    let task1El = getByTestId('task-task-1');
+    fireEvent.click(task1El);
+    const forwardsEl = getByTestId('stage-0-move-right');
+    fireEvent.click(forwardsEl);
+    const stageEl = getByTestId('stage-1');
+    // Waiting for task 1 to change (remove the 'clicked' class)
+    task1El = await waitForElement(
+      () => {
+        return getByTestId('task-task-1');
+      },
+      { App }
+    );
+    expect(stageEl.contains(task1El)).toBeTruthy();
+  });
+  it('can move task 3 to Stage 0', async () => {
+    const { getByTestId } = render(<App />);
+    let taskEl = getByTestId('task-task-3');
+    fireEvent.click(taskEl);
+    const backwardsEl = getByTestId('stage-1-move-left');
+    fireEvent.click(backwardsEl);
+    const stageEl = getByTestId('stage-0');
+    taskEl = await waitForElement(
+      () => {
+        return getByTestId('task-task-3');
+      },
+      { App }
+    );
+    expect(stageEl.contains(taskEl)).toBeTruthy();
+  });
+});
 
-describe('7. Clear localStorage with the button', () => {});
+describe('7. Clear localStorage with the button', () => {
+  it('clears tasks upon Clear All Tasks button click', () => {
+    const { getByTestId, unmount } = render(<App />);
+    const buttonEl = getByTestId('app-clear-button');
+    fireEvent.click(buttonEl);
+    unmount();
+    expect(Object.keys(JSON.parse(localStorage.tasks)).length).toBe(0);
+  });
+});
