@@ -129,9 +129,6 @@ class App extends React.Component {
     });
   }
   clearTasks() {
-    if (this.state.localStorage) {
-      localStorage.clear();
-    }
     this.setState({ tasks: {} });
   }
   renderStages() {
@@ -182,7 +179,11 @@ class App extends React.Component {
         >
           {this.renderStages()}
         </div>
-        <Button className="clear" onClick={this.clearTasks}>
+        <Button
+          className="clear"
+          data-testid="app-clear-button"
+          onClick={this.clearTasks}
+        >
           Clear All Tasks
         </Button>
       </span>
