@@ -4,6 +4,9 @@ import { waitForDomChange, wait, waitForElement } from '@testing-library/dom';
 import '@testing-library/jest-dom/extend-expect';
 import App from './App';
 
+// Replaces standard JS alert
+global.alert = jest.fn();
+
 // Runs before and after each test to set the environment
 beforeEach(() => {
   localStorage.setItem(
@@ -125,6 +128,17 @@ describe('3. Added a Task to Stage 0', () => {
       Object.keys(JSON.parse(localStorage.tasks)).includes('task 5')
     ).toBeTruthy();
   });
+  it('will alert the user if the task name has already been used', async () => {
+    const { getByTestId } = render(<App />);
+    const addButtonEl = getByTestId('stage-0-add-button');
+    fireEvent.click(addButtonEl);
+    const inputEl = getByTestId('stage-0-new-task-input');
+    inputEl.value = 'task 1';
+    fireEvent.change(inputEl);
+    const confirmEl = getByTestId('stage-0-new-task-input-confirm');
+    fireEvent.click(confirmEl);
+    expect(alert).toHaveBeenCalledTimes(1);
+  });
   it('shows the Add Task button again after New Task Submit', async () => {
     const { getByTestId } = render(<App />);
     const addButtonEl = getByTestId('stage-0-add-button');
@@ -142,6 +156,12 @@ describe('3. Added a Task to Stage 0', () => {
 });
 
 describe('4. Clicking on a task brings up task options', () => {
+  it('has a new class on click', () => {
+    const { getByTestId } = render(<App />);
+    const taskEl = getByTestId('task-task-1');
+    fireEvent.click(taskEl);
+    expect(taskEl).toHaveClass('clicked');
+  });
   it('shows that Stage 0 tasks have 2 buttons: forwards and delete', () => {
     const { getByTestId, queryByTestId } = render(<App />);
     const stageEl = getByTestId('stage-0');
@@ -191,6 +211,29 @@ describe('4. Clicking on a task brings up task options', () => {
     expect(queryByTestId('stage-3-move-right')).not.toBeInTheDocument();
     expect(deleteEl).toBeInTheDocument();
     expect(stageEl.contains(deleteEl)).toBeTruthy();
+  });
+  it('loses the clicked class and task options upon second click', () => {
+    const { getByTestId, queryByTestId } = render(<App />);
+    const taskEl = getByTestId('task-task-1');
+    fireEvent.click(taskEl);
+    fireEvent.click(taskEl);
+    expect(taskEl).not.toHaveClass('clicked');
+    expect(queryByTestId('stage-0-move-left')).not.toBeInTheDocument();
+    expect(queryByTestId('stage-0-move-right')).not.toBeInTheDocument();
+    expect(queryByTestId('stage-0-delete')).not.toBeInTheDocument();
+  });
+  it("shows the task options on the the newly clicked task's stage when a new task is clicked and there is already a task clicked", () => {
+    const { getByTestId, queryByTestId } = render(<App />);
+    const task1El = getByTestId('task-task-1');
+    const task3El = getByTestId('task-task-3');
+    fireEvent.click(task1El);
+    fireEvent.click(task3El);
+    expect(queryByTestId('stage-0-move-left')).not.toBeInTheDocument();
+    expect(queryByTestId('stage-0-move-right')).not.toBeInTheDocument();
+    expect(queryByTestId('stage-0-delete')).not.toBeInTheDocument();
+    expect(queryByTestId('stage-1-move-left')).toBeInTheDocument();
+    expect(queryByTestId('stage-1-move-right')).toBeInTheDocument();
+    expect(queryByTestId('stage-1-delete')).toBeInTheDocument();
   });
 });
 
@@ -248,3 +291,14 @@ describe('7. Clear localStorage with the button', () => {
     expect(Object.keys(JSON.parse(localStorage.tasks)).length).toBe(0);
   });
 });
+
+// describe('8. No LocalStorage results in an alert', () => {
+//   it('shows an alert', () => {
+//     // Anonymous function to create a scope where localStorage is undefined
+//     (function(localStorage) {
+//       console.log(global.localStorage);
+//       render(<App />);
+//       expect(alert).toHaveBeenCalledTimes(1);
+//     })(undefined);
+//   });
+// });
