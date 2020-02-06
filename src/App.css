@@ -54,10 +54,6 @@
   padding: 10px 0px;
 }
 
-.task-active {
-  background-color: blue;
-}
-
 .green {
   /* Note: hidden attribute fails to work if there is a more specific selector attribute, such as display: flex */
   background-color: rgb(36, 138, 36);
@@ -89,8 +85,7 @@ input.bp3-input {
 }
 
 .clicked {
-  background-color: rgb(1, 73, 139);
-  color: white;
+  background-color: rgb(203, 141, 209);
 }
 
 /* CSS for Task Buttons */
@@ -118,5 +113,9 @@ span.bp3-icon {
 .back,
 .forward {
   color: white;
-  background-color: rgb(32, 115, 209);
+  background-color: rgb(188, 79, 202);
+}
+
+.clear {
+  margin-left: 5px;
 }
