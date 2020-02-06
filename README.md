@@ -10,14 +10,17 @@ Why?: Based on a timed coding challenge I received and did terribly on. I decide
 ### Features
 
 ![App Picture](./readme-pics/Board.png)<br>
-Users can add tasks to one of the four categories. Tasks cannot have the same name since the unique identifier of a task is its name. If the new task name is already active, the user will be alerted. The 'Clear All Tasks' button will clear all the tasks on the screen. When the tab or window is closed, the app will save all the task data to the web browser's localStorage for retrieval on the next visit.
+Users can add tasks to one of the four categories. Tasks cannot have the same name since the task name is its unique identifier. If the new task name is already on the page, the user will be alerted.
+<br>The 'Clear All Tasks' button will clear all the tasks on the screen.
+<br>When the tab or window is closed, the app will save all the task data to the web browser's localStorage for retrieval on the next visit.
+<br>
 <br>
 ![Picture of a Task Clicked](./readme-pics/Task-Clicked.png)<br>
-Clicking on a task highlights the task in pink and brings up options for that task. The task can be moved with the 'Back' and 'Forward' buttons (the stages on the ends are lacking one of the buttons to keep the logic sound). The delete button will delete the task.
+Clicking on a task highlights the task in pink and brings up options for that task. The task can be moved with the 'Back' and 'Forward' buttons (the stages on the ends are lacking one of the buttons because logically one cannot move past the outer categories). The delete button will delete the task.
 
 ### Testing
 
-A current 96% test coverage and an overview of all the tests run.
+The current 96% test coverage and an overview of all the tests run.
 <br>
 ![Test Coverage](./readme-pics/Coverage.png)
 
