@@ -20,13 +20,9 @@ Clicking on a task highlights the task in pink and brings up options for that ta
 
 ### Testing
 
-The current 96% test coverage and an overview of all the tests run.
+The current 100% test coverage! An overview of all the tests run:
 <br>
 ![Test Coverage](./readme-pics/Coverage.png)
-
-### To do
-
-- Achieve 100% test coverage
 
 ### Usage
 
