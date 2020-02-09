@@ -4,11 +4,31 @@ import { waitForDomChange, wait, waitForElement } from '@testing-library/dom';
 import '@testing-library/jest-dom/extend-expect';
 import App from './App';
 
-// Replaces standard JS alert
-global.alert = jest.fn();
+// Practice mocking things - not really neccessary for localStorage since jest has a built-in one (that calls a private variable _localStorage)
+class LocalStorageMock {
+  constructor() {
+    this.store = {};
+  }
+
+  getItem(key) {
+    return this.store[key] || null;
+  }
+
+  setItem(key, value) {
+    this.store[key] = value;
+  }
+
+  clear() {
+    this.store = {};
+  }
+}
 
 // Runs before and after each test to set the environment
 beforeEach(() => {
+  // Set the global variables to a new version every test for the same environment each time
+  // Replaces standard JS alert with jest.fn(), a mock function
+  global.alert = jest.fn();
+  global._localStorage = new LocalStorageMock();
   localStorage.setItem(
     'tasks',
     '{"task 1":["0",false],"task 2":["0",false],"task 3":["1",false],"task 4":["2",false]}'
@@ -123,9 +143,11 @@ describe('3. Added a Task to Stage 0', () => {
     const newTask = getByTestId('task-task-5');
     expect(newTask).toBeInTheDocument();
     unmount();
-    expect(Object.keys(JSON.parse(localStorage.tasks)).length).toBe(5);
+    expect(Object.keys(JSON.parse(localStorage.getItem('tasks'))).length).toBe(
+      5
+    );
     expect(
-      Object.keys(JSON.parse(localStorage.tasks)).includes('task 5')
+      Object.keys(JSON.parse(localStorage.getItem('tasks'))).includes('task 5')
     ).toBeTruthy();
   });
   it('will alert the user if the task name has already been used', async () => {
@@ -288,17 +310,21 @@ describe('7. Clear localStorage with the button', () => {
     const buttonEl = getByTestId('app-clear-button');
     fireEvent.click(buttonEl);
     unmount();
-    expect(Object.keys(JSON.parse(localStorage.tasks)).length).toBe(0);
+    expect(Object.keys(JSON.parse(localStorage.getItem('tasks'))).length).toBe(
+      0
+    );
   });
 });
 
-// describe('8. No LocalStorage results in an alert', () => {
-//   it('shows an alert', () => {
-//     // Anonymous function to create a scope where localStorage is undefined
-//     (function(localStorage) {
-//       console.log(global.localStorage);
-//       render(<App />);
-//       expect(alert).toHaveBeenCalledTimes(1);
-//     })(undefined);
-//   });
-// });
+describe('8. LocalStorage branches', () => {
+  it('shows an alert when no localStorage', () => {
+    global._localStorage = undefined;
+    render(<App />);
+    expect(alert).toHaveBeenCalledTimes(1);
+  });
+  it('runs without error even when there are no tasks in localStorage', () => {
+    localStorage.clear();
+    const { queryByTestId } = render(<App />);
+    expect(queryByTestId('task-task-1')).not.toBeInTheDocument();
+  });
+});
